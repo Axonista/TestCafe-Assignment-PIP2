@@ -2,6 +2,6 @@
   "dependencies": {
     "dotenv": "^16.5.0",
     "mailslurp-client": "^15.23.1",
-    "testcafe": "^3.7.2"
+    "testcafe": "^2.2.0"
   }
 }

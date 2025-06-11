@@ -40,7 +40,6 @@ class userinvitationPage {
       await t.wait(5000);
   }
 
-
     async invitenewUser(testEmail) {
      
    //Open the Invite New User page and send invitation
@@ -69,12 +68,29 @@ async verifyuserInvitation(mailslurp, inbox, testEmail , inviterEmail) {
     const email = await mailslurp.waitForLatestEmail(inbox.id, 5000); 
     console.log('The email is successfully received in inbox');
 
+    // Verify Email Subject
     await t.expect(email.subject).contains("Ediflo Registration", 'Subject check failed');
     console.log('Subject in email is verified successfully');
+    
+    //Verify Email Body
+    const actualemailBody = email.body;
+    const expectedInviteeAddress = `Hi ${testEmail}`;
+    const expectedInviteMessage = `${process.env.ADMIN_EMAIL} has invited you to join Ediflo.`;
+    const expectedInstruction = 'To accept this invitation and register to your organisation’s Ediflo account, please follow the instructions below:';
+    const expectedExpiryMessage = 'The invitation will expire within 3 days of this email being received. Please ignore this email if it was sent in error.';
 
-    // Verify the sender
-    console.log('Sender:', email.from); // For debug
-
+    // Assertions to verify each line of the email body
+    await t.expect(actualemailBody).contains(expectedInviteeAddress , 'Invitee address is not displayed correctly');
+    console.log('Invitee address is displayed correctly');
+    await t.expect(actualemailBody).contains(expectedInviteMessage , 'Invite Message is not displayed correctly');
+    console.log('Invite message is displayed correctly');
+    await t.expect(actualemailBody).contains(expectedInstruction , 'Instructions to accept invite and register are not displayed correctly');
+    console.log('Instructions to accept invite and register are displayed correctly');
+    await t.expect(actualemailBody).contains(expectedExpiryMessage , 'Expiry message of invitation is not displayed correctly');
+    console.log('Expiry message of invitation is displayed correctly');
+    
+    // Verify the sender Email Address
+    console.log('Sender:', email.from);
     await t.expect(email.from).eql(process.env.CONFIRMATION_EMAIL_SENDER , '❌ Sender email does not match expected');
 
     // Extract link from email body
@@ -93,7 +109,7 @@ async verifyuserInvitation(mailslurp, inbox, testEmail , inviterEmail) {
 
 }
 
-async verifyconfirmationPage() {
+       async verifyconfirmationPage() {
 
     // Confirmation page is loaded correctly with all elements visible for creating a new user.
     await t.expect(this.confirmfirstName.visible).ok('First name field is not displayed');
@@ -108,18 +124,15 @@ async verifyconfirmationPage() {
     console.log('Show Password text is displayed  successfully');
     await t.expect(this.confirmsignUp.visible).ok('Sign Up button is not displayed');
     console.log('Sign Up button is displayed  successfully');
-
     console.log('Confirmation page is verified successfully');
 
 }
 
     async deleteInbox(mailslurp , inbox) {
-
    //Delete the email after verifications
     await mailslurp.deleteInbox(inbox.id);
     console.log('Inbox Email is deleted successfully');
     }
   }
-
 
 export default new userinvitationPage();

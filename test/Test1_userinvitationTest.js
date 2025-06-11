@@ -24,8 +24,8 @@ test("Add new user with all data", async t => {
     const inviterEmail = process.env.ADMIN_EMAIL;
     console.log(`Temporary email created: ${testEmail}`);
 
-  await userinvitationPage.invitenewUser(testEmail);
-  await userinvitationPage.verifyuserInvitation(mailslurp,inbox, testEmail, inviterEmail);
-  await userinvitationPage.verifyconfirmationPage();
-  await userinvitationPage.deleteInbox(mailslurp , inbox);
+    await userinvitationPage.invitenewUser(testEmail);
+    await userinvitationPage.verifyuserInvitation(mailslurp,inbox, testEmail, inviterEmail);
+    await userinvitationPage.verifyconfirmationPage();
+    await userinvitationPage.deleteInbox(mailslurp , inbox);
 });

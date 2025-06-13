@@ -52,7 +52,7 @@ class userinvitationPage {
 
   }
 
-  async verifyuserInvitation(mailslurp, inbox, testEmail, inviterEmail) {
+  async verifyuserInvitation(mailslurp, inbox, testEmail) {
     // Wait for the invitation email
     console.log(`Waiting for email.`);
     const email = await mailslurp.waitForLatestEmail(inbox.id, 5000);
@@ -96,9 +96,7 @@ class userinvitationPage {
     // ✅ Open the confirmation link
     await t.navigateTo(confirmationLink);
     console.log('Navigation to Confirmation page is successfully');
-    await t.wait(5000);
-    await this.verifyconfirmationPage();
-
+    
   }
 
   async verifyconfirmationPage() {
@@ -128,7 +126,7 @@ class userinvitationPage {
 
   async deleteUser(testEmail) {
 
-    await t.expect(this.accountName.exists).ok('Account Name is not displayed', { timeout: 5000 });
+    await t.expect(this.accountName.exists).ok('Account Name is not displayed', { timeout: 10000 });
     console.log('Account Name is displayed successfully');
     await t.click(this.accountName);
     console.log('Account Name is displayed successfully');

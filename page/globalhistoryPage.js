@@ -22,7 +22,7 @@ class globalhistoryPage {
         this.timestampListGHPage = XPathSelector("//tr/td[5]");
     }
 
-    async verifyassetGlobalHistory(title , expectedDate , expectedTime) {
+    async verifyassetGlobalHistory(title , expectedDate , expectedTime , type , nowUTC) {
 
         await t.expect(this.accountName.visible).ok('Account name is not displayed', { timeout: 10000 });
         await t.click(this.accountName);
@@ -30,12 +30,28 @@ class globalhistoryPage {
         await t.expect(this.globalHistory.visible).ok('Global History is not displayed', { timeout: 10000 });
         await t.click(this.globalHistory);
         console.log('Global History is clicked successfully');
-        const dropdownOption = Selector('.Select__option').nth(2);
         await t.expect(this.selectObject.visible).ok('Dropdown object not visible', { timeout: 10000 })
         await t.click(this.selectObject);
+
+        let dropdownIndex;
+    switch (type.toLowerCase()) {
+        case 'assets':
+            dropdownIndex = 2;
+            break;
+        case 'series':
+            dropdownIndex = 4;
+            break;
+        case 'collections':
+            dropdownIndex = 0;
+            break;
+        default:
+            throw new Error(`Unknown object type: ${type}`);
+    }
+
+        const dropdownOption = Selector('.Select__option').nth(dropdownIndex);
         await t.expect(dropdownOption.visible).ok('Dropdown option not visible', { timeout: 10000 })
         await t.click(dropdownOption);
-        console.log('Assets is selected from dropdown');
+        console.log(`"${type}" is selected from dropdown`);
         await t.expect(this.filter.visible).ok('Filter is not displayed', { timeout: 10000 });
         await t.click(this.filter);
         console.log('Filter is clicked successfully');
@@ -54,15 +70,15 @@ class globalhistoryPage {
         const objectCount = await this.objectList.count;
         for (let i = 0; i < objectCount; i++) {
             const objectText = await this.objectList.nth(i).innerText;
-            await t.expect(objectText).contains('Assets', `Element ${i} does not contain 'Assets'`, { timeout: 10000 });
+            await t.expect(objectText).eql(type, `Element ${i} does not contain '${type}'`, { timeout: 10000 });
         }
-        console.log('All the Assets on Global History Page are displayed successfully.')
+        console.log('All the Objects on Global History Page are displayed successfully.')
 
         //Verify all User names are same as Account holder name selected in filter
         const userCount = await this.usernameListGHPage.count;
         for (let i = 0; i < userCount; i++) {
             const userText = await this.usernameListGHPage.nth(i).innerText;
-            await t.expect(userText).contains((await this.accountName.innerText).trim(), `Element ${i} does not contain username`, { timeout: 10000 });
+            await t.expect(userText).eql((await this.accountName.innerText).trim(), `Element ${i} does not contain username`, { timeout: 10000 });
         }
         console.log('All the Users on Global History Page are displayed successfully.')
 
@@ -77,12 +93,12 @@ class globalhistoryPage {
 
                 // Validate object type
                 const objectText = await this.objectList.nth(i).innerText;
-                await t.expect(objectText).contains('Assets', `Object type mismatch at index ${i}`, { timeout: 10000 });
+                await t.expect(objectText).eql(type, `Object type mismatch at index ${i}`, { timeout: 10000 });
                 console.log(`Correct Object type for "${title}" is displayed successfully`);
 
                 // Validate user name
                 const userText = await this.usernameListGHPage.nth(i).innerText;
-                await t.expect(userText).contains((await this.accountName.innerText).trim(), `User name mismatch at index ${i}`, { timeout: 10000 });
+                await t.expect(userText).eql((await this.accountName.innerText).trim(), `User name mismatch at index ${i}`, { timeout: 10000 });
                 console.log(`Correct User for "${title}" is displayed successfully.`);
 
                 //Validate timestamp
@@ -91,13 +107,13 @@ class globalhistoryPage {
 
                 // Validate date line
                 await t.expect(dateLine).eql(expectedDate, `Expected date "${expectedDate}", but found "${dateLine}"`);
-                console.log(`Asset creation date ${dateLine} for "${title}" is verified successfully`);
+                console.log(`${type} creation date ${dateLine} for "${title}" is verified successfully`);
                 
                 //Validate time
                 const actualTime = moment.utc(timeLine, 'HH:mm:ss [UTC]');
-                const diffInSeconds = Math.abs(actualTime.diff(this.nowUTC, 'seconds'));
+                const diffInSeconds = Math.abs(actualTime.diff(nowUTC, 'seconds'));
                 await t.expect(diffInSeconds).lte(60, `Time difference too large. Expected: ${expectedTime}, Found: ${timeLine}`);
-                console.log(`Asset timestamp ${timeLine} for asset "${title}" is verified successfully`);
+                console.log(`${type} timestamp ${timeLine} for asset "${title}" is verified successfully`);
                 break;
             }
         }

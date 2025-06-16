@@ -35,8 +35,8 @@ test("Add/Edit Asset and Validate Global History", async t => {
   const expectedDate = nowUTC.format('MMM DD YYYY');
   const expectedTime = nowUTC.format('HH:mm:ss [UTC]');   // e.g., "00:17:46 UTC"
   console.log(`Captured expected timestamp: ${expectedDate} ${expectedTime}`);
-  await assetPage.editTest(newSynopsis, title , type);
-  await globalhistoryPage.verifyassetGlobalHistory(title , expectedDate , expectedTime);
+  await assetPage.editTest(newSynopsis , type);
+  await globalhistoryPage.verifyassetGlobalHistory(title , expectedDate , expectedTime , type , nowUTC);
 });
 
 test("Add/Edit Series and Validate Global History", async t => {
@@ -51,22 +51,22 @@ test("Add/Edit Series and Validate Global History", async t => {
   const expectedDate = nowUTC.format('MMM DD YYYY');
   const expectedTime = nowUTC.format('HH:mm:ss [UTC]');  
   console.log(`Captured expected timestamp: ${expectedDate} ${expectedTime}`);
-  await assetPage.editTest(newSynopsis, title , type);
-  await globalhistoryPage.verifyassetGlobalHistory(title , expectedDate , expectedTime);
+  await assetPage.editTest(newSynopsis , type);
+  await globalhistoryPage.verifyassetGlobalHistory(title , expectedDate , expectedTime , type , nowUTC);
 });
 
-//test("Add/Edit Collection and Validate Global History", async t => {
+test("Add/Edit Collection and Validate Global History", async t => {
 
-  //title = process.env.COLLECTION_TITLE;
-  //const synopsis = process.env.COLLECTION_SYNOPTIS;
-  //const newSynopsis = process.env.NEW_COLLECTION_SYNOPSIS;
-  //const type = 'Collections';
+  title = process.env.COLLECTION_TITLE;
+  const synopsis = process.env.COLLECTION_SYNOPSIS;
+  const newSynopsis = process.env.NEW_COLLECTION_SYNOPSIS;
+  type = 'Collections';
 
-  //await assetPage.addTest(title, synopsis , type);
-  //const nowUTC = moment.utc();
-  //const expectedDate = nowUTC.format('MMM DD YYYY');
-  //const expectedTime = nowUTC.format('HH:mm:ss [UTC]');  
-  //console.log(`Captured expected timestamp: ${expectedDate} ${expectedTime}`);
-  //await assetPage.editTest(newSynopsis, title);
-  //await globalhistoryPage.verifyassetGlobalHistory(title , expectedDate , expectedTime);
-//});
+  await assetPage.addTest(title, synopsis , type);
+  const nowUTC = moment.utc();
+  const expectedDate = nowUTC.format('MMM DD YYYY');
+  const expectedTime = nowUTC.format('HH:mm:ss [UTC]');  
+  console.log(`Captured expected timestamp: ${expectedDate} ${expectedTime}`);
+  await assetPage.editTest(newSynopsis, type);
+  await globalhistoryPage.verifyassetGlobalHistory(title , expectedDate , expectedTime ,type, nowUTC);
+});

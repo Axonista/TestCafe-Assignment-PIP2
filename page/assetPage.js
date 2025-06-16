@@ -12,30 +12,33 @@ class assetPage {
     this.plusicononAsset = XPathSelector("//*[contains (@class,'--create')]//*[@class='material-icons']");
     this.addTitle = XPathSelector("//*[contains (@class,'side__panel')]//*[@name='title']");
     this.addSynopsis = XPathSelector("//*[contains (@class,'side__panel')]//*[@name='synopsis']");
+    this.addDescription = XPathSelector("//*[contains (@class,'side__panel')]//*[@name='description']");
+    this.metadata = XPathSelector("//*[@data-identifier='metadata']");
     this.editSynopsis = XPathSelector("//*[contains (@class,'group-content')]//*[@name='synopsis']");
+    this.editDescription = XPathSelector("//*[contains (@class,'group-content')]//*[@name='description']");
     this.addsaveButton = XPathSelector("//*[contains (@class,'side__panel')]//*[text()='Save']");
     this.editsaveButton = XPathSelector("//*[@class='pull-right']//*[text()='Save']");
     this.searchBox = XPathSelector("//*[contains(@class,'searchBox')]");
     this.alertMessage = XPathSelector("//*[contains(@class , 'message-inner')]");
     this.moreAction = XPathSelector("//*[contains(@class,'header__actions')]//*[@title='More actions']");
-    this.deleteButton = XPathSelector("//*[@class='tmp__header']//*[contains(@data-command, 'delete')]");
+    this.deleteButton = XPathSelector("//*[contains(normalize-space(text()), 'Delete')]");
     this.confirmdeleteButton = XPathSelector("//*[contains (@class , 'btn-danger')]");
-    
+
   }
 
-    getSectionSelector(type) {
-  switch (type.toLowerCase()) {
-    case 'assets':
-      return this.assetsSection;
-    case 'series':
-      return this.seriesSection;
-    case 'collection':
-      return this.collectionSection;
-    default:
-      throw new Error(`Unknown section type: ${type}`);
+  getSectionSelector(type) {
+    switch (type) {
+      case 'Assets':
+        return this.assetsSection;
+      case 'Series':
+        return this.seriesSection;
+      case 'Collections':
+        return this.collectionSection;
+      default:
+        throw new Error(`Unknown section type: ${type}`);
+    }
   }
-}
-  async addTest(title, synopsis , type) {
+  async addTest(title, synopsis, type) {
 
     const sectionSelector = this.getSectionSelector(type);
     await t.expect(sectionSelector.visible).ok(`"${type}" section is not displayed`, { timeout: 10000 });
@@ -47,31 +50,46 @@ class assetPage {
     await t.expect(this.addTitle.visible).ok(`"${type}" title is not displayed`, { timeout: 10000 });
     await t.typeText(this.addTitle, title, { paste: true });
     console.log(`"${type}" title is entered successfully`);
-    await t.expect(this.addSynopsis.visible).ok(`"${type}" description is not displayed`, { timeout: 10000 });
-    await t.typeText(this.addSynopsis, synopsis, { paste: true });
-    console.log(`"${type}" description is entered successfully`);
+
+    if (type === 'Collections') {
+      await t.expect(this.addDescription.visible).ok(`"${type}" description is not displayed`, { timeout: 10000 });
+      await t.typeText(this.addDescription, synopsis, { paste: true });
+      console.log(`"${type}" description is entered successfully`);
+    } else {
+      await t.expect(this.addSynopsis.visible).ok(`"${type}" synopsis is not displayed`, { timeout: 10000 });
+      await t.typeText(this.addSynopsis, synopsis, { paste: true });
+      console.log(`"${type}" description is entered successfully`);
+    }
+  
     await t.expect(this.addsaveButton.visible).ok('Save button is not displayed', { timeout: 10000 });
     await t.click(this.addsaveButton);
     console.log('Save button is clicked successfully');
-    //await t.expect(this.alertMessage.visible).ok(`New "${type}" created confirmation message is not displayed`, { timeout: 10000 });
-    //await t.expect(this.alertMessage.innerText).contains(`${type} "${title}" saved`, `New "${type}" created confirmation message is not displayed`, { timeout: 10000 });
-    //console.log(`"${type}" saved confirmation message validated successfully`);
-
   }
 
-  async editTest(newSynopsis, title , type) {
+  async editTest(newSynopsis, type) {
 
-    await t.expect(this.editSynopsis.visible).ok(`"${type}" description is not displayed`, { timeout: 10000 });
-    await t.typeText(this.editSynopsis, newSynopsis, { replace: true });
-    console.log(`"${type}" description is edited successfully`);
+    if (type === 'Collections') {
+      await t.expect(this.metadata.visible).ok(`"${type}" metadata is not displayed`, { timeout: 10000 });
+      await t.click(this.metadata);
+      console.log(`"${type}" metadata is clicked successfully`);
+    }
+
+    if (type === 'Collections') {
+      await t.expect(this.editDescription.visible).ok(`"${type}" description is not displayed`, { timeout: 10000 });
+      await t.typeText(this.editDescription, newSynopsis, { paste: true });
+      console.log(`"${type}" description is edited successfully`);
+    } else {
+      await t.expect(this.editSynopsis.visible).ok(`"${type}" synopsis is not displayed`, { timeout: 10000 });
+      await t.typeText(this.editSynopsis, newSynopsis, { paste: true });
+      console.log(`"${type}" description is entered successfully`);
+    }
+
     await t.expect(this.editsaveButton.visible).ok('Save button is not displayed', { timeout: 10000 });
     await t.click(this.editsaveButton);
     console.log('Save button is clicked successfully');
-    //await t.expect(this.alertMessage.innerText).contains(`${type} "${title}" saved`, 'Asset Edited confirmation message is not displayed', { timeout: 10000 });
-    //console.log('Alert message is displayed successfully');
-  
   }
-  async deleteTest(title , type) {
+
+  async deleteTest(title, type) {
 
     const sectionSelector = this.getSectionSelector(type);
     await t.expect(sectionSelector.visible).ok(`"${type}" section not visible`, { timeout: 10000 });

@@ -50,7 +50,7 @@ test("Verify user invite ,email and confirmationPage verification", async t => {
   console.log(`Temporary email created`);
 
     await userinvitationPage.invitenewUser(testEmail);
-    //await userinvitationPage.verifyuserInvitation(mailslurp, inbox, testEmail, process.env.ADMIN_EMAIL);
+    await userinvitationPage.verifyuserInvitation(mailslurp, inbox, testEmail, process.env.ADMIN_EMAIL);
     await userinvitationPage.verifyconfirmationPage();
   
 });

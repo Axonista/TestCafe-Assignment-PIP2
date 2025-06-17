@@ -9,15 +9,16 @@ dotenv.config();
 const mailslurp = new MailSlurp({ apiKey: process.env.MAILSLURP_API_KEY });
 console.log("MAILSLURP_API_KEY:");
 
-let inbox;        // Declare in outer scope
+let inbox;        
 let testEmail;  
+const accountname = 'QA Test Account';
 
 fixture('Validate User invitation flow')
   .page(process.env.STAGING_URL + "")
   .skipJsErrors()
   .beforeEach(async t => {
     await t.maximizeWindow();
-    await loginPage.login(process.env.ADMIN_EMAIL, process.env.ADMIN_PASSWORD);
+    await loginPage.login(process.env.ADMIN_EMAIL, process.env.ADMIN_PASSWORD, accountname);
   })
 
 .afterEach(async t => {

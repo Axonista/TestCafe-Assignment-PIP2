@@ -117,7 +117,7 @@ class globalhistoryPage {
                 break;
             }
         }
-        await t.expect(matchFound).ok(`Asset "${title}" not found in Global History`, { timeout: 10000 });
+        await t.expect(matchFound).ok(`${type} "${title}" not found in Global History`, { timeout: 10000 });
     }
 }
 

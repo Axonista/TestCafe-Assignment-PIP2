@@ -9,7 +9,6 @@ class loginPage {
 
     //Open QA Test Account
     this.accountsdropDown = XPathSelector("//button[@id='accountsDropdown']");
-    this.selectAccount = XPathSelector("//*[text()='QA Test Account']");
 
     // Login Selectors
     this.emailField = Selector("input[name='username']");
@@ -17,7 +16,7 @@ class loginPage {
     this.signInButton = Selector("button[type='submit']");
   }
 
-  async login(email, password) {
+  async login(email, password, accountname) {
     await t.expect(this.emailField.exists).ok({ timeout: 10000 });
     await t.typeText(this.emailField, email, { paste: true });
     console.log('Email is entered successfully');
@@ -30,8 +29,9 @@ class loginPage {
     await t.expect(this.accountsdropDown.exists).ok({ timeout: 10000 });
     await t.click(this.accountsdropDown);
     console.log('Account dropdown is clicked successfully');
-    await t.expect(this.selectAccount.exists).ok({ timeout: 10000 });
-    await t.click(this.selectAccount);
+    const selectAccount = XPathSelector(`//*[text()='${accountname}']`);
+    await t.expect(selectAccount.exists).ok({ timeout: 10000 });
+    await t.click(selectAccount);
     console.log('Account is selected successfully');
 
   }

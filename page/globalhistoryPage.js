@@ -15,11 +15,12 @@ class globalhistoryPage {
         this.userradioButton = XPathSelector("//*[@value='user']");
         this.searchUser = XPathSelector("//*[text()='Search users']");
         this.searchButton = XPathSelector("//*[@type='submit']");
-        this.objectList = XPathSelector("//tr/td[3]");
+        this.objectList = XPathSelector("//*[@class='history__table']//tbody/tr/td[3]");
+        this.objectDropdown = XPathSelector("//*[contains(@class,'Select__menu-list')]//*[contains(@class,'Select__option')]");
         this.assetList = XPathSelector("//div[contains(@class,'item-card')]");
         this.assetnameListGHPage = XPathSelector("//*[@class='item-card__title']");
         this.usernameListGHPage = XPathSelector("//*[@class='user-tag__email']");
-        this.timestampListGHPage = XPathSelector("//tr/td[5]");
+        this.timestampListGHPage = XPathSelector("//*[@class='history__table']//tbody/tr/td[5]");
     }
 
     async verifyassetGlobalHistory(title , expectedDate , expectedTime , type , nowUTC) {
@@ -48,8 +49,8 @@ class globalhistoryPage {
             throw new Error(`Unknown object type: ${type}`);
     }
 
-        const dropdownOption = Selector('.Select__option').nth(dropdownIndex);
-        await t.expect(dropdownOption.visible).ok('Dropdown option not visible', { timeout: 10000 })
+        const dropdownOption = this.objectDropdown.nth(dropdownIndex);
+        await t.expect(dropdownOption.visible).ok('Dropdown option not visible', { timeout: 10000 });
         await t.click(dropdownOption);
         console.log(`"${type}" is selected from dropdown`);
         await t.expect(this.filter.visible).ok('Filter is not displayed', { timeout: 10000 });

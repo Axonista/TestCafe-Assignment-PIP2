@@ -1,5 +1,5 @@
 import { Selector, t } from 'testcafe';
-import XPathSelector from '../helpers/xpath-selector.js';
+import XPathSelector from '../helpers/xpath-selector';
 import dotenv from 'dotenv';
 dotenv.config();
 import objectsPage from '../page/objectsPage.js';
@@ -7,33 +7,35 @@ import loginPage from '../page/loginPage.js';
 import globalhistoryPage from '../page/globalhistoryPage.js';
 import moment from 'moment';
 
+const timestamp = moment().format('YYYYMMDD_HHmmss');
+
 const testData = [
   {
     type: 'Assets',
-    title: process.env.ASSET_TITLE,
+    title: `${process.env.ASSET_TITLE}_${timestamp}`,
     synopsis: process.env.ASSET_SYNOPSIS,
     newSynopsis: process.env.NEW_ASSET_SYNOPSIS,
-    add: objectsPage.addAsset,
-    edit: objectsPage.editAsset,
-    del: objectsPage.deleteAsset,
+    addMethod: 'addAsset',
+    editMethod: 'editAsset',
+    deleteMethod: 'deleteAsset',
   },
   {
     type: 'Series',
-    title: process.env.SERIES_TITLE,
+    title: `${process.env.SERIES_TITLE}_${timestamp}`,
     synopsis: process.env.SERIES_SYNOPSIS,
     newSynopsis: process.env.NEW_SERIES_SYNOPSIS,
-    add: objectsPage.addSeries,
-    edit: objectsPage.editSeries,
-    del: objectsPage.deleteSeries,
+    addMethod: 'addSeries',
+    editMethod: 'editSeries',
+    deleteMethod: 'deleteSeries',
   },
   {
     type: 'Collections',
-    title: process.env.COLLECTION_TITLE,
+    title: `${process.env.COLLECTION_TITLE}_${timestamp}`,
     synopsis: process.env.COLLECTION_SYNOPSIS,
     newSynopsis: process.env.NEW_COLLECTION_SYNOPSIS,
-    add: objectsPage.addCollection,
-    edit: objectsPage.editCollection,
-    del: objectsPage.deleteCollection,
+    addMethod: 'addCollection',
+    editMethod: 'editCollection',
+    deleteMethod: 'deleteCollection',
   },
 ];
 
@@ -47,7 +49,7 @@ for (const data of testData) {
     })
     .afterEach(async () => {
       await t.setNativeDialogHandler(() => true);
-      await data.del.call(objectsPage, data.title);
+      await globalhistoryPage[data.deleteMethod](data.title);
     });
 
   test(`Add/Edit/Delete ${data.type} and Validate Global History`, async () => {
@@ -58,8 +60,9 @@ for (const data of testData) {
     console.log(`Running test for: ${data.type}`);
     console.log(`Captured timestamp: ${expectedDate} ${expectedTime}`);
 
-    await data.add.call(objectsPage, data.title, data.synopsis);
-    await data.edit.call(objectsPage, data.newSynopsis);
-    await globalhistoryPage.verifyassetGlobalHistory(data.title, expectedDate, expectedTime, data.type, nowUTC);
+    await globalhistoryPage.selectAccount();
+    await globalhistoryPage[data.addMethod](data.title, data.synopsis);
+    await globalhistoryPage[data.editMethod](data.newSynopsis);
+    await objectsPage.verifyassetGlobalHistory(data.title,expectedDate,expectedTime,data.type,nowUTC);
   });
 }

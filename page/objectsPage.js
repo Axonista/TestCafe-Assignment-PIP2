@@ -13,7 +13,8 @@ class objectsPage {
         this.selectObject = XPathSelector("//div[contains(@class,'19bb58m')]");
         this.filter = XPathSelector("//*[@title='Filter']");
         this.userradioButton = XPathSelector("//*[@value='user']");
-        this.searchUser = XPathSelector("//*[text()='Search users']");
+        this.searchUser = Selector('.Select__control input').nth(1); 
+        this.userResult = XPathSelector("//*[contains(@class,'Select__menu-list')]//*[contains(@class,'Select__option')]");
         this.searchButton = XPathSelector("//*[@type='submit']");
         this.objectList = XPathSelector("//*[@class='history__table']//tbody/tr/td[3]");
         this.objectDropdown = XPathSelector("//*[contains(@class,'Select__menu-list')]//*[contains(@class,'Select__option')]");
@@ -59,9 +60,11 @@ class objectsPage {
         await t.expect(this.userradioButton.visible).ok('User Radio button is not displayed', { timeout: 10000 });
         await t.click(this.userradioButton);
         console.log('User Radio button is clicked successfully');
-        await t.expect(this.searchUser.visible).ok('User search is not displayed', { timeout: 10000 });
-        await t.typeText(this.searchUser, process.env.ADMIN_EMAIL, { paste: true });
-        await t.pressKey('enter');
+        await t.expect(this.searchUser.visible).ok('Search input is not visible', {timeout : 10000});
+        await t.typeText(this.searchUser, 'Saily', { paste: true });
+        const userOption = this.userResult.withText('Saily');
+        await t.expect(userOption.exists).ok('Correct user option not displayed');
+        await t.click(userOption);
         console.log('User is selected successfully');
         await t.expect(this.searchButton.visible).ok('Search button is not displayed', { timeout: 10000 });
         await t.click(this.searchButton);

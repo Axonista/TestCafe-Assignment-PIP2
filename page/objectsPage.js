@@ -24,7 +24,7 @@ class objectsPage {
         this.timestampListGHPage = XPathSelector("//*[@class='history__table']//tbody/tr/td[5]");
     }
 
-    async verifyassetGlobalHistory(title , expectedDate , expectedTime , type , nowUTC) {
+    async globalhistoryFilter(type) {
 
         await t.expect(this.accountName.visible).ok('Account name is not displayed', { timeout: 10000 });
         await t.click(this.accountName);
@@ -69,7 +69,9 @@ class objectsPage {
         await t.expect(this.searchButton.visible).ok('Search button is not displayed', { timeout: 10000 });
         await t.click(this.searchButton);
         console.log('Search button is clicked successfully');
-
+}
+ 
+        async verifyObjectType() {
         //Verify all Object Type displayed are Assets
         const objectCount = await this.objectList.count;
         for (let i = 0; i < objectCount; i++) {
@@ -77,7 +79,8 @@ class objectsPage {
             await t.expect(objectText).eql(type, `Element ${i} does not contain '${type}'`, { timeout: 10000 });
         }
         console.log('All the Objects on Global History Page are displayed successfully.')
-
+    }
+    async verifyUserType() {
         //Verify all User names are same as Account holder name selected in filter
         const userCount = await this.usernameListGHPage.count;
         for (let i = 0; i < userCount; i++) {
@@ -85,7 +88,9 @@ class objectsPage {
             await t.expect(userText).eql((await this.accountName.innerText).trim(), `Element ${i} does not contain username`, { timeout: 10000 });
         }
         console.log('All the Users on Global History Page are displayed successfully.')
+    }
 
+    async verifyNewObjectHistory(title , expectedDate , expectedTime , type , nowUTC) {
         //Validate the Edited asset User , Object and Timestamp
         const assetCount = await this.assetnameListGHPage.count;
         let matchFound = false;

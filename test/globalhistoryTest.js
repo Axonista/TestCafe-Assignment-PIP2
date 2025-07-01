@@ -2,67 +2,99 @@ import { Selector, t } from 'testcafe';
 import XPathSelector from '../helpers/xpath-selector';
 import dotenv from 'dotenv';
 dotenv.config();
-import objectsPage from '../page/objectsPage.js';
 import loginPage from '../page/loginPage.js';
 import globalhistoryPage from '../page/globalhistoryPage.js';
 import moment from 'moment';
 
 const timestamp = moment().format('YYYYMMDD_HHmmss');
 
-const testData = [
-  {
-    type: 'Assets',
-    title: `${process.env.ASSET_TITLE}_${timestamp}`,
-    synopsis: process.env.ASSET_SYNOPSIS,
-    newSynopsis: process.env.NEW_ASSET_SYNOPSIS,
-    addMethod: 'addAsset',
-    editMethod: 'editAsset',
-    deleteMethod: 'deleteAsset',
-  },
-  {
-    type: 'Series',
-    title: `${process.env.SERIES_TITLE}_${timestamp}`,
-    synopsis: process.env.SERIES_SYNOPSIS,
-    newSynopsis: process.env.NEW_SERIES_SYNOPSIS,
-    addMethod: 'addSeries',
-    editMethod: 'editSeries',
-    deleteMethod: 'deleteSeries',
-  },
-  {
-    type: 'Collections',
-    title: `${process.env.COLLECTION_TITLE}_${timestamp}`,
-    synopsis: process.env.COLLECTION_SYNOPSIS,
-    newSynopsis: process.env.NEW_COLLECTION_SYNOPSIS,
-    addMethod: 'addCollection',
-    editMethod: 'editCollection',
-    deleteMethod: 'deleteCollection',
-  },
-];
+let title = '';
+let type = '';
 
-for (const data of testData) {
-  fixture(`Add/Edit/Delete ${data.type} and Validate Global History`)
-    .page(process.env.STAGING_URL)
-    .skipJsErrors(true)
-    .beforeEach(async () => {
-      await t.maximizeWindow();
-      await loginPage.login(process.env.ADMIN_EMAIL, process.env.ADMIN_PASSWORD);
-    })
-    .afterEach(async () => {
-      await t.setNativeDialogHandler(() => true);
-      await globalhistoryPage[data.deleteMethod](data.title);
-    });
+fixture('Add/Edit/Delete Items and Validate Global History')
+  .page(process.env.STAGING_URL)
+  .skipJsErrors(true)
+  .beforeEach(async () => {
+    await t.maximizeWindow();
+    await loginPage.login(process.env.ADMIN_EMAIL, process.env.ADMIN_PASSWORD);
+  })
+  .afterEach(async t => {
+    await t.setNativeDialogHandler(() => true);
 
-  test(`Add/Edit/Delete ${data.type} and Validate Global History`, async () => {
-    const nowUTC = moment.utc();
-    const expectedDate = nowUTC.format('MMM DD YYYY');
-    const expectedTime = nowUTC.format('HH:mm:ss [UTC]');
-
-    console.log(`Running test for: ${data.type}`);
-    console.log(`Captured timestamp: ${expectedDate} ${expectedTime}`);
-
-    await globalhistoryPage.selectAccount();
-    await globalhistoryPage[data.addMethod](data.title, data.synopsis);
-    await globalhistoryPage[data.editMethod](data.newSynopsis);
-    await objectsPage.verifyassetGlobalHistory(data.title,expectedDate,expectedTime,data.type,nowUTC);
+    switch (type) {
+      case 'Assets':
+        await loginPage.selectAssetsTab();
+        await globalhistoryPage.deleteAsset(title);
+        break;
+      case 'Series':
+        await loginPage.selectSeriesTab();
+        await globalhistoryPage.deleteSeries(title);
+        break;
+      case 'Collections':
+        await loginPage.selectCollectionsTab();
+        await globalhistoryPage.deleteCollection(title);
+        break;
+      default:
+        console.warn(`No delete action for type: ${type}`);
+    }
   });
-}
+
+test('Add/Edit/Delete Assets and Validate Global History', async () => {
+  title = `${process.env.ASSET_TITLE}_${timestamp}`;
+  type = 'Assets';
+
+  const synopsis = process.env.ASSET_SYNOPSIS;
+  const newSynopsis = process.env.NEW_ASSET_SYNOPSIS;
+  const nowUTC = moment.utc();
+  const expectedDate = nowUTC.format('MMM DD YYYY');
+  const expectedTime = nowUTC.format('HH:mm:ss [UTC]');
+
+  await loginPage.selectQATestAccount();
+  await loginPage.selectAssetsTab();
+  await globalhistoryPage.addAsset(title, synopsis);
+  await globalhistoryPage.editAsset(newSynopsis);
+  await globalhistoryPage.globalhistoryFilter(type);
+  await globalhistoryPage.verifyObjectType(type);
+  await globalhistoryPage.verifyUserType();
+  await globalhistoryPage.verifyNewObjectHistory(title, expectedDate, expectedTime, type, nowUTC);
+});
+
+test('Add/Edit/Delete Series and Validate Global History', async () => {
+  title = `${process.env.SERIES_TITLE}_${timestamp}`;
+  type = 'Series';
+
+  const synopsis = process.env.SERIES_SYNOPSIS;
+  const newSynopsis = process.env.NEW_SERIES_SYNOPSIS;
+  const nowUTC = moment.utc();
+  const expectedDate = nowUTC.format('MMM DD YYYY');
+  const expectedTime = nowUTC.format('HH:mm:ss [UTC]');
+
+  await loginPage.selectQATestAccount();
+  await loginPage.selectSeriesTab();
+  await globalhistoryPage.addSeries(title, synopsis);
+  await globalhistoryPage.editSeries(newSynopsis);
+  await globalhistoryPage.globalhistoryFilter(type);
+  await globalhistoryPage.verifyObjectType(type);
+  await globalhistoryPage.verifyUserType();
+  await globalhistoryPage.verifyNewObjectHistory(title, expectedDate, expectedTime, type, nowUTC);
+});
+
+test('Add/Edit/Delete Collections and Validate Global History', async () => {
+  title = `${process.env.COLLECTION_TITLE}_${timestamp}`;
+  type = 'Collections';
+
+  const synopsis = process.env.COLLECTION_SYNOPSIS;
+  const newSynopsis = process.env.NEW_COLLECTION_SYNOPSIS;
+  const nowUTC = moment.utc();
+  const expectedDate = nowUTC.format('MMM DD YYYY');
+  const expectedTime = nowUTC.format('HH:mm:ss [UTC]');
+
+  await loginPage.selectQATestAccount();
+  await loginPage.selectCollectionsTab();
+  await globalhistoryPage.addCollection(title, synopsis);
+  await globalhistoryPage.editCollection(newSynopsis);
+  await globalhistoryPage.globalhistoryFilter(type);
+  await globalhistoryPage.verifyObjectType(type);
+  await globalhistoryPage.verifyUserType();
+  await globalhistoryPage.verifyNewObjectHistory(title, expectedDate, expectedTime, type, nowUTC);
+});

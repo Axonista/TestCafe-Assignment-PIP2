@@ -37,14 +37,6 @@ class Test1_userinvitationPage {
   async invitenewUser(testEmail) {
 
     //Open the Invite New User page and send invitation
-    
-    await t.expect(this.accountsdropDown.exists).ok({ timeout: 10000 });
-    await t.click(this.accountsdropDown);
-    console.log('Account dropdown is clicked successfully');
-    await t.expect(this.selectAccount.exists).ok({ timeout: 10000 });
-    await t.click(this.selectAccount);
-    await t.expect(this.confirmQAAccount.exists).ok('QA Test account is selected successfully' , { timeout: 10000 });
-    console.log('Account is selected successfully');
     await t.expect(this.accountName.exists).ok('Account Name is not displayed', { timeout: 10000 });
     await t.click(this.accountName);
     console.log('Account Name is clicked successfully');

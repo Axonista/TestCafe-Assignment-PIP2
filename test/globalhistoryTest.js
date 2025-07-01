@@ -46,7 +46,7 @@ test('Add/Edit/Delete Assets and Validate Global History', async () => {
   const synopsis = process.env.ASSET_SYNOPSIS;
   const newSynopsis = process.env.NEW_ASSET_SYNOPSIS;
   const nowUTC = moment.utc();
-  const expectedDate = nowUTC.format('MMM DD YYYY');
+  const expectedDate = nowUTC.format('MMM D YYYY');
   const expectedTime = nowUTC.format('HH:mm:ss [UTC]');
 
   await loginPage.selectQATestAccount();
@@ -66,7 +66,7 @@ test('Add/Edit/Delete Series and Validate Global History', async () => {
   const synopsis = process.env.SERIES_SYNOPSIS;
   const newSynopsis = process.env.NEW_SERIES_SYNOPSIS;
   const nowUTC = moment.utc();
-  const expectedDate = nowUTC.format('MMM DD YYYY');
+  const expectedDate = nowUTC.format('MMM D YYYY');
   const expectedTime = nowUTC.format('HH:mm:ss [UTC]');
 
   await loginPage.selectQATestAccount();
@@ -86,7 +86,7 @@ test('Add/Edit/Delete Collections and Validate Global History', async () => {
   const synopsis = process.env.COLLECTION_SYNOPSIS;
   const newSynopsis = process.env.NEW_COLLECTION_SYNOPSIS;
   const nowUTC = moment.utc();
-  const expectedDate = nowUTC.format('MMM DD YYYY');
+  const expectedDate = nowUTC.format('MMM D YYYY');
   const expectedTime = nowUTC.format('HH:mm:ss [UTC]');
 
   await loginPage.selectQATestAccount();

@@ -1,8 +1,11 @@
 {
   "dependencies": {
-    "dotenv": "^16.5.0",
+    "dotenv": "^16.6.1",
     "mailslurp-client": "^15.23.1",
     "node-fetch": "^3.3.2",
     "testcafe": "^3.7.2"
+  },
+  "devDependencies": {
+    "testcafe-reporter-html": "^1.4.6"
   }
 }

@@ -24,6 +24,8 @@ class Test1_userinvitationPage {
     this.confirmdeleteCheckbox = XPathSelector("//input[@name='confirmDeletion']");
     this.confirmdeleteButton = XPathSelector("//*[contains (@class , 'btn-danger')]");
     this.confirmdeleteMessage = XPathSelector("//div[@class='DisplayMessage--text']");
+    this.useremailinvite = XPathSelector("//*[@class='item-card__title']");
+    this.usernameinvitestatus = XPathSelector("//*[@class='item-card__secondary']");
 
     //Confirmation page for Registring Ediflo
     this.confirmfirstName = XPathSelector("//input[@name='firstName']");
@@ -53,6 +55,25 @@ class Test1_userinvitationPage {
     await t.click(this.saveButton);
     console.log('Save button is clicked successfully');
 
+    await t.eval(() => location.reload(true));
+    await t.wait(3000);
+
+    const count = await this.useremailinvite.count;
+    let matchFound = false;
+
+    for (let i = 0; i < count; i++) {
+      const useremail = (await this.usernameinvite.nth(i).innerText).trim();
+      const status = (await this.usernameinvitestatus.nth(i).innerText).trim();
+
+      if (useremail === testEmail && status === 'INVITED') {
+        await t
+          .expect(useremail).eql(testEmail, `Username matched at index ${i}`)
+          .expect(status).eql('INVITED', `Status matched at index ${i}`);
+        matchFound = true;
+        break;
+      }
+    }
+    await t.expect(matchFound).ok(`No matching user found with email: ${testEmail} and status: INVITED`);
   }
 
   async verifyuserInvitation(mailslurp, inbox, testEmail) {

@@ -28,7 +28,7 @@ test('Validate that UI and API Asset count match', async t => {
 
   console.log(`Assets Response Status:`, resp.status);
   const responseText = JSON.stringify(resp.body);
-  const apiCount = (responseText.match(/"type"\s*:\s*"LibraryEvent"/g) || []).length;
+  const apiCount = resp.body.list.filter(item => item.self && item.self.includes("/events/")).length;
 
   console.log(`Total Assets: ${apiCount}`);
 
@@ -53,7 +53,7 @@ test('Validate that UI and API Series count match', async t => {
 
   console.log(`Series Response Status:`, resp.status);
   const responseText = JSON.stringify(resp.body);
-  const apiCount = (responseText.match(/"type"\s*:\s*"LibrarySeries"/g) || []).length;
+  const apiCount = resp.body.list.filter(item => item.self && item.self.includes("/series/")).length;
 
   console.log(`Total Series: ${apiCount}`);
 
@@ -78,7 +78,7 @@ test('Validate that UI and API Collections count match', async t => {
 
   console.log(`Collections Response Status:`, resp.status);
   const responseText = JSON.stringify(resp.body);
-  const apiCount = (responseText.match(/"type"\s*:\s*"LibraryCollection"/g) || []).length;
+  const apiCount = resp.body.list.filter(item => item.self && item.self.includes("/collections/")).length;
 
   console.log(`Total Collections: ${apiCount}`);
 

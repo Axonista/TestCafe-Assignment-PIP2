@@ -50,7 +50,7 @@ class loginPage {
     console.log('Account dropdown is clicked successfully');
     await t.expect(this.selectTexasRangerAccount.exists).ok({ timeout: 10000 });
     await t.click(this.selectTexasRangerAccount);
-    await t.expect(this.confirmTexasRangerAccount.innerText).eql('Texas Ranger','Texas Ranger  not is selected', { timeout: 10000 });
+    await t.expect(this.confirmTexasRangerAccount.innerText).eql('Texas Rangers','Texas Ranger  not is selected', { timeout: 10000 });
     console.log('Texas Ranger is selected successfully');
   }
 

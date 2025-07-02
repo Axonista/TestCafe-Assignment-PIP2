@@ -10,7 +10,7 @@ fixture('Remoco API Tests')
   .beforeEach(async t => {
     await t.maximizeWindow();
     await loginPage.login(process.env.ADMIN_EMAIL, process.env.ADMIN_PASSWORD);
-    await loginPage.selectTexasRangersAccount();
+    await loginPage.selectAccount('Texas Rangers');
   });
 
 test('Validate that UI and API Asset count match', async t => {

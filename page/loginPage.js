@@ -33,26 +33,20 @@ class loginPage {
     console.log('Sign in button is clicked successfully');
   }
 
-  async selectQATestAccount() {
 
-    await t.expect(this.accountsdropDown.exists).ok({ timeout: 10000 });
-    await t.click(this.accountsdropDown);
-    console.log('Account dropdown is clicked successfully');
-    await t.expect(this.selectQAAccount.exists).ok({ timeout: 10000 });
-    await t.click(this.selectQAAccount);
-    await t.expect(this.confirmQAAccount.innerText).eql('QA Test Account', 'QA Test Account is not selected', { timeout: 10000 });
-    console.log('QA Test Account is selected successfully');
-  }
+  async selectAccount(accountName) {
+  await t.expect(this.accountsdropDown.exists).ok({ timeout: 10000 });
+  await t.click(this.accountsdropDown);
+  console.log('Account dropdown is clicked successfully');
 
-  async selectTexasRangersAccount() {
-    await t.expect(this.accountsdropDown.exists).ok({ timeout: 10000 });
-    await t.click(this.accountsdropDown);
-    console.log('Account dropdown is clicked successfully');
-    await t.expect(this.selectTexasRangerAccount.exists).ok({ timeout: 10000 });
-    await t.click(this.selectTexasRangerAccount);
-    await t.expect(this.confirmTexasRangerAccount.innerText).eql('Texas Rangers','Texas Ranger  not is selected', { timeout: 10000 });
-    console.log('Texas Ranger is selected successfully');
-  }
+  const accountOption = XPathSelector(`//*[contains(@class,'item__title') and text()='${accountName}']`);
+  const confirmAccount = XPathSelector(`//*[@title='${accountName}']`);
+
+  await t.expect(accountOption.exists).ok({ timeout: 10000 });
+  await t.click(accountOption);
+  await t.expect(confirmAccount.innerText).eql(accountName, `${accountName} is not selected`, { timeout: 10000 });
+  console.log(`${accountName} is selected successfully`);
+}
 
   async selectAssetsTab() {
     await t.expect(this.assetsTab.visible).ok('Asset section is not displayed', { timeout: 10000 });

@@ -18,6 +18,7 @@ fixture('Validate User invitation flow')
   .beforeEach(async t => {
     await t.maximizeWindow();
     await loginPage.login(process.env.ADMIN_EMAIL, process.env.ADMIN_PASSWORD);
+    await loginPage.selectAccount('QA Test Account');
   })
 
 .afterEach(async t => {
@@ -49,9 +50,7 @@ test("Verify user invite ,email and confirmationPage verification", async t => {
   testEmail = inbox.emailAddress;
   console.log(`Temporary email created`);
 
-    await loginPage.selectQAAccount();
     await userinvitationPage.invitenewUser(testEmail);
     await userinvitationPage.verifyuserInvitation(mailslurp, inbox, testEmail, process.env.ADMIN_EMAIL);
     await userinvitationPage.verifyconfirmationPage();
-  
 });

@@ -49,7 +49,7 @@ test('Add/Edit/Delete Assets and Validate Global History', async () => {
   const expectedDate = nowUTC.format('MMM D YYYY');
   const expectedTime = nowUTC.format('HH:mm:ss [UTC]');
 
-  await loginPage.selectQATestAccount();
+  await loginPage.selectAccount('QA Test Account');
   await loginPage.selectAssetsTab();
   await globalhistoryPage.addAsset(title, synopsis);
   await globalhistoryPage.editAsset(newSynopsis);
@@ -69,7 +69,7 @@ test('Add/Edit/Delete Series and Validate Global History', async () => {
   const expectedDate = nowUTC.format('MMM D YYYY');
   const expectedTime = nowUTC.format('HH:mm:ss [UTC]');
 
-  await loginPage.selectQATestAccount();
+  await loginPage.selectAccount('QA Test Account');
   await loginPage.selectSeriesTab();
   await globalhistoryPage.addSeries(title, synopsis);
   await globalhistoryPage.editSeries(newSynopsis);
@@ -89,7 +89,7 @@ test('Add/Edit/Delete Collections and Validate Global History', async () => {
   const expectedDate = nowUTC.format('MMM D YYYY');
   const expectedTime = nowUTC.format('HH:mm:ss [UTC]');
 
-  await loginPage.selectQATestAccount();
+  await loginPage.selectAccount('QA Test Account');
   await loginPage.selectCollectionsTab();
   await globalhistoryPage.addCollection(title, synopsis);
   await globalhistoryPage.editCollection(newSynopsis);

@@ -9,6 +9,8 @@ const getElementRight = ClientFunction(selector => selector().getBoundingClientR
 
 class uiresponsePage {
     constructor() {
+
+        //Xpath of elements
         this.logo = XPathSelector("//*[@alt='Texas Logo']");
         this.signin = XPathSelector("//*[text()='Sign In']");
         this.signinTitle = XPathSelector("//*[text()='SIGN IN']");
@@ -24,19 +26,17 @@ class uiresponsePage {
     }
 
     async validateElements() {
+
+        //Validate all the elements are visible and clicking on it moves to expected page
         await t.expect(this.logo.visible).ok('Logo is not visible', { timeout: 10000 });
         console.log('Logo is displayed successfully');
         await t.eval(() => window.history.back());
-
         await t.expect(this.signin.visible).ok('Sign in button is not visible', { timeout: 10000 });
         await t.click(this.signin);
         console.log('Sign in button is clicked successfully');
-        await t.expect(this.signinTitle.exists).ok('Sign in title is not displayed',{ timeout: 15000 });
-        console.log('Sign in title exists successfully');
         await t.expect(this.signinTitle.visible).ok('Sign in title is not visible', { timeout: 10000 });
         console.log('Sign in title is displayed successfully');
         await t.eval(() => window.history.back());
-
         await t.expect(this.signup.visible).ok('Sign up button is not visible', { timeout: 10000 });
         await t.click(this.signup);
         console.log('Sign up button is clicked successfully');
@@ -64,11 +64,12 @@ class uiresponsePage {
         await t.expect(this.pagenotfound.visible).ok('Page not found is not displayed', { timeout: 10000 });
         console.log('Page not found is displayed successfully');
         await t.eval(() => window.history.back());
-
         await t.expect(this.signin.exists).ok('Sign In button not found after back navigation');
     }
 
     async checkLinkAlignment() {
+
+        //Validate that all the 3 links are aligned
         await t.expect(this.privacypolicy.exists).ok('Privacy Policy not found');
         await t.expect(this.termsandconditions.exists).ok('Terms and Conditions not found');
         await t.expect(this.customerservice.exists).ok('Customer Service not found');
@@ -86,6 +87,8 @@ class uiresponsePage {
     }
 
     async checkdescriptionAlignment() {
+
+        //Validate that description and subdescription are aligned
         const descriptionYaxis = await getElementTop(this.description);
         const subdescriptionYaxis = await getElementTop(this.subdescription);
 
@@ -105,6 +108,8 @@ class uiresponsePage {
     }
 
     async checkHeaderLayout() {
+
+        //Validate that logo and Sign in button are aligned
         const logoYaxis = await getElementTop(this.logo);
         const signinYaxis = await getElementTop(this.signin);
 

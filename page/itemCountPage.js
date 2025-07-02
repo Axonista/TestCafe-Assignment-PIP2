@@ -6,6 +6,7 @@ import 'dotenv/config';
 class itemCountPage {
     constructor() {
 
+        //Xpath of elements
         this.assetsTab = XPathSelector("//*[contains(@href, 'assets') and text()='Assets']");
         this.seriesTab = XPathSelector("//*[contains(@href, 'series') and text()='Series']");
         this.collectionTab = XPathSelector("//*[contains(@href, 'collections') and text()='Collections']");
@@ -28,6 +29,7 @@ class itemCountPage {
 
     async uiapiAssetCount() {
 
+        //Filter to get total number of published assets
         await t.expect(this.filterasset.visible).ok('Asset filter is not displayed', { timeout: 10000 });
         await t.click(this.filterasset);
         console.log('Asset filter is clicked successfully');
@@ -73,7 +75,6 @@ class itemCountPage {
                 await t.scrollIntoView(this.nextPageButton);
                 await t.expect(this.nextPageButton.visible).ok('Next page button not visible', { timeout: 10000 });
                 await t.click(this.nextPageButton);
-                // Optional: Wait until assets are loaded
                 await t.expect(this.totalassets.nth(0).visible).ok('Assets did not load after clicking next page', { timeout: 10000 });
             } else {
                 console.log('No more pages to navigate.');
@@ -88,6 +89,7 @@ class itemCountPage {
 
     async uiapiSeriesCount() {
 
+        //Filter to get total number of published series
         await t.expect(this.filterasset.visible).ok('Asset filter is not displayed', { timeout: 10000 });
         await t.click(this.filterasset);
         console.log('Series filter is clicked successfully');
@@ -121,7 +123,6 @@ class itemCountPage {
                 await t.scrollIntoView(this.nextPageButton);
                 await t.expect(this.nextPageButton.visible).ok('Next page button not visible', { timeout: 10000 });
                 await t.click(this.nextPageButton);
-                // Wait until assets are loaded
                 await t.expect(this.totalseries.nth(0).visible).ok('Series did not load after clicking next page', { timeout: 10000 });
             } else {
                 console.log('No more pages to navigate.');
@@ -150,7 +151,7 @@ class itemCountPage {
                     console.log(`Collection ${i} is not published. Status: ${statusText}`);
                 }
             }
-
+            // If fewer than 20 assets, we are on the last page
             if (collectionCount < 20) {
                 console.log('Reached last page.');
                 break;
@@ -160,7 +161,6 @@ class itemCountPage {
                 await t.scrollIntoView(this.nextPageButton);
                 await t.expect(this.nextPageButton.visible).ok('Next page button not visible', { timeout: 10000 });
                 await t.click(this.nextPageButton);
-                // Wait until assets are loaded
                 await t.expect(this.totalcollections.nth(0).visible).ok('Collections did not load after clicking next page', { timeout: 10000 });
             } else {
                 console.log('No more pages to navigate.');

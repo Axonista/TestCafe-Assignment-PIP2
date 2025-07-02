@@ -7,7 +7,7 @@ import 'dotenv/config';
 class loginPage {
   constructor() {
 
-    // Login Selectors
+    //Xpath of elements
     this.emailField = Selector("input[name='username']");
     this.passwordField = Selector("input[name='password']");
     this.signInButton = Selector("button[type='submit']");
@@ -22,6 +22,8 @@ class loginPage {
   }
 
   async login(email, password) {
+
+    //Login with user email and password
     await t.expect(this.emailField.exists).ok({ timeout: 10000 });
     await t.typeText(this.emailField, email, { paste: true });
     console.log('Email is entered successfully');
@@ -35,6 +37,8 @@ class loginPage {
 
 
   async selectAccount(accountName) {
+
+  //Select QA Test Account  
   await t.expect(this.accountsdropDown.exists).ok({ timeout: 10000 });
   await t.click(this.accountsdropDown);
   console.log('Account dropdown is clicked successfully');
@@ -49,6 +53,8 @@ class loginPage {
 }
 
   async selectAssetsTab() {
+
+    //Select Assets tab
     await t.expect(this.assetsTab.visible).ok('Asset section is not displayed', { timeout: 10000 });
     await t.click(this.assetsTab);
     await t.expect(this.assetsTab.innerText).eql('Assets', 'Assets tab is not selected', { timeout: 10000 });
@@ -56,6 +62,8 @@ class loginPage {
   }
 
   async selectSeriesTab() {
+
+    //Select Series tab
     await t.expect(this.seriesTab.visible).ok('Asset section is not displayed', { timeout: 10000 });
     await t.click(this.seriesTab);
     await t.expect(this.seriesTab.innerText).eql('Series', 'Series tab is not displayed', { timeout: 10000 });
@@ -63,6 +71,8 @@ class loginPage {
   }
 
   async selectCollectionsTab() {
+
+    //Select Collections tab
     await t.expect(this.collectionTab.visible).ok('Asset section is not displayed', { timeout: 10000 });
     await t.click(this.collectionTab);
     await t.expect(this.collectionTab.innerText).eql('Collections', 'Collections tab is not displayed', { timeout: 10000 });

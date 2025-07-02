@@ -9,7 +9,7 @@ dotenv.config();
 class Test1_userinvitationPage {
   constructor() {
 
-    // Create New User Page
+    //Xpath of elements
     this.accountsdropDown = XPathSelector("//button[@id='accountsDropdown']");
     this.selectAccount = XPathSelector("//*[contains(@aria-label,'Select account')]");
     this.confirmQAAccount = XPathSelector("//*[contains(@class,'item__title') and text()='QA Test Account']");
@@ -140,6 +140,7 @@ class Test1_userinvitationPage {
 
   async deleteUser(testEmail) {
 
+    //Delete the email address entry in Profile
       await t.expect(this.accountName.exists).ok('Account Name is not displayed', { timeout: 10000 });
       console.log('Account Name is displayed successfully');
       await t.click(this.accountName);

@@ -8,7 +8,7 @@ dotenv.config();
 
 class globalhistoryPage {
   constructor() {
-    // Login Selectors
+    //Xpath of elements
     this.plusicon = XPathSelector("//*[contains (@class,'--create')]//*[@class='material-icons']");
     this.searchResult = XPathSelector("//*[contains(@class,'card__title')]");
     this.title = XPathSelector("//*[contains(@class,'side__panel')]//*[@name='title']");
@@ -43,8 +43,9 @@ class globalhistoryPage {
     this.timestampListGHPage = XPathSelector("//*[@class='history__table']//tbody/tr/td[5]");
   }
 
+  //Create new asset
   async addAsset(title, synopsis) {
-
+  
     await t.expect(this.plusicon.visible).ok('Add Asset icon is not displayed', { timeout: 10000 });
     await t.click(this.plusicon);
     console.log('Add Asset icon  is displayed successfully');
@@ -60,7 +61,7 @@ class globalhistoryPage {
 
     const getPageUrl = ClientFunction(() => window.location.href);
     this.pageURL = await getPageUrl();
-    // ✅ Extract Asset ID from the URL
+    // ✅ Extract Asset ID from the URL and search the Asset ID in search box
     this.assetId = this.pageURL.split('/assets/')[1].split('/metadata')[0];
     console.log('Extracted Asset ID:', this.assetId);
     await t.typeText(this.searchBox, `id:${this.assetId}`, { paste: true });
@@ -74,6 +75,7 @@ class globalhistoryPage {
 
   async addSeries(title, synopsis) {
 
+    //Create new series
     await t.expect(this.plusicon.visible).ok('Series icon is not displayed', { timeout: 10000 });
     await t.click(this.plusicon);
     console.log('Add Series icon  is displayed successfully');
@@ -89,7 +91,7 @@ class globalhistoryPage {
 
     const getPageUrl = ClientFunction(() => window.location.href);
     this.pageURL = await getPageUrl();
-    // ✅ Extract Series ID from the URL
+    // ✅ Extract Series ID from the URL and search Series ID in search box
     this.seriesId = this.pageURL.split('/series/')[1].split('/metadata')[0];
     console.log('Extracted Series ID:', this.seriesId);
     await t.typeText(this.searchBox, `id:${this.seriesId}`, { paste: true });
@@ -102,6 +104,7 @@ class globalhistoryPage {
 
   async addCollection(title, synopsis) {
 
+    //Create new collection
     await t.expect(this.plusicon.visible).ok('Add Collection icon is not displayed', { timeout: 10000 });
     await t.click(this.plusicon);
     console.log('Add Collection icon  is displayed successfully');
@@ -118,7 +121,7 @@ class globalhistoryPage {
     const getPageUrl = ClientFunction(() => window.location.href);
     this.pageURL = await getPageUrl();
     console.log('Collection is created successfully');
-    // ✅ Extract collection name from the URL
+    // ✅ Extract collection name from the URL and search collection code in search box
     this.collectionCode = this.pageURL.split('/collections/')[1].split('/')[0];
     console.log('Extracted Collection Name:', this.collectionCode);
     await t.typeText(this.searchBox, this.collectionCode, { paste: true });
@@ -131,6 +134,7 @@ class globalhistoryPage {
 
   async editAsset(newSynopsis) {
 
+    //Edit new created asset
     await t.expect(this.editSynopsis.visible).ok('Asset description is not displayed', { timeout: 10000 });
     await t.typeText(this.editSynopsis, newSynopsis, { replace: true });
     console.log('Asset description is edited successfully');
@@ -142,7 +146,7 @@ class globalhistoryPage {
   }
 
   async editSeries(newSynopsis) {
-
+    //Edit new created series
     await t.expect(this.editSynopsis.visible).ok('Series description is not displayed', { timeout: 10000 });
     await t.typeText(this.editSynopsis, newSynopsis, { replace: true });
     console.log('Series description is edited successfully');
@@ -155,6 +159,7 @@ class globalhistoryPage {
 
   async editCollection(newSynopsis) {
 
+    //Edit new created collection
     await t.expect(this.collectionMetadata.visible).ok('Collection metadata is not displayed', { timeout: 10000 });
     await t.click(this.collectionMetadata);
     console.log('Collection metadata is clicked successfully');
@@ -170,6 +175,7 @@ class globalhistoryPage {
 
   async deleteAsset(title) {
 
+    //Search the asset ID in search box and delete the asset
     await t.typeText(this.searchBox, `id:${this.assetId}`, { replace: true });
     await t.expect(this.searchResult.innerText).eql(title, 'Search Result is not same as title', { timeout: 10000 });
     await t.click(this.searchResult);
@@ -191,6 +197,7 @@ class globalhistoryPage {
 
   async deleteSeries(title) {
 
+    //Search the series ID in search box and delete the series
     await t.typeText(this.searchBox, `id:${this.seriesId}`, { replace: true });
     await t.expect(this.searchResult.innerText).eql(title, 'Search Result is not same as title', { timeout: 10000 });
     await t.click(this.searchResult);
@@ -210,6 +217,7 @@ class globalhistoryPage {
 
   async deleteCollection(title) {
 
+    //Search the collection code in search box and delete the collection
     await t.typeText(this.searchBox, this.collectionCode, { replace: true });
     await t.expect(this.searchResult.innerText).eql(title, 'Search Result is not same as title', { timeout: 10000 });
     await t.click(this.searchResult);
@@ -229,6 +237,7 @@ class globalhistoryPage {
 
   async globalhistoryFilter(type) {
 
+    //Filter Object and User in Global History
     await t.expect(this.accountName.visible).ok('Account name is not displayed', { timeout: 10000 });
     await t.click(this.accountName);
     console.log('Account name is clicked successfully');
@@ -294,7 +303,7 @@ class globalhistoryPage {
   }
 
   async verifyNewObjectHistory(title, expectedDate, expectedTime, type, nowUTC) {
-    //Validate the Edited asset User , Object and Timestamp
+    //Validate the User , Object and Timestamp in global History
     const assetCount = await this.assetnameListGHPage.count;
     let matchFound = false;
     for (let i = 0; i < assetCount; i++) {
@@ -313,15 +322,14 @@ class globalhistoryPage {
         await t.expect(userText).eql((await this.accountName.innerText).trim(), `User name mismatch at index ${i}`, { timeout: 10000 });
         console.log(`Correct User for "${title}" is displayed successfully.`);
 
-        //Validate timestamp
         const timestampText = await this.timestampListGHPage.nth(i).innerText;
         const [dateLine, timeLine] = timestampText.trim().split('\n').map(line => line.trim());
 
-        // Validate date line
+        // Validate expected date
         await t.expect(dateLine).eql(expectedDate, `Expected date "${expectedDate}", but found "${dateLine}"`);
         console.log(`${type} creation date ${dateLine} for "${title}" is verified successfully`);
 
-        //Validate time
+       //Validate timestamp
         const actualTime = moment.utc(timeLine, 'HH:mm:ss [UTC]');
         const diffInSeconds = Math.abs(actualTime.diff(nowUTC, 'seconds'));
         await t.expect(diffInSeconds).lte(60, `Time difference too large. Expected: ${expectedTime}, Found: ${timeLine}`);
